@@ -17,7 +17,7 @@ class SDModel(Model):
     def __init__(self, cuda=True):
         self.pipe = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0", 
                                                       torch_dtype=torch.float16, use_safetensors=True, variant="fp16")
-        if cuda:
+        if cuda and torch.cuda.is_available():
             self.pipe.to('cuda')
 
     def query(self, prompt, negative_prompt=None):

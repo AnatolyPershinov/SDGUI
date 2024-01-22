@@ -10,7 +10,9 @@ def main(page: ft.Page):
     send_button = ft.ElevatedButton(text="Generate")
 
     def send_click(e):
-        img = model.query(text_input1.value, text_input2.value)
+        with open('result.jpg', 'wb') as f:
+            img = model.query(text_input1.value, text_input2.value)
+            f.write(img)
         
 
     send_button.on_click = send_click
