@@ -1,11 +1,8 @@
 import flet as ft
-from models.SD import SDModel
-import io
+# from models.SD import SDModel
 import base64
-import pickle
-
-model = SDModel()
-
+from io import BytesIO
+from PIL import Image
 
 
 def render(page: ft.Page):
@@ -13,30 +10,24 @@ def render(page: ft.Page):
     text_input2 = ft.TextField(hint_text="Negative prompt", multiline=True)
     send_button = ft.ElevatedButton(text="Generate")
     progress_ring = ft.ProgressRing(visible=False)
-
-
-
-    image_container = ft.Stack([ft.Container(progress_ring, alignment=ft.alignment.center)], width=512, height=512)
-
+    image = ft.Image(width=512, height=512)
+    image_container = ft.Stack([image, ft.Container(progress_ring, alignment=ft.alignment.center)],
+                               width=512, height=512)
     input_container = ft.Container(ft.Column([text_input1, text_input2, send_button]), padding=100)
 
     def send_click(e):
         progress_ring.visible = True
         page.update()
 
-        
-        img = model.query(text_input1.value, text_input2.value)
+        # img = model.query(text_input1.value, text_input2.value)
+        img = Image.open("test.jpg")
 
-        img_byte_arr = io.BytesIO()
-        img.save("test.jpg")
-        img.save(img_byte_arr, format='PNG')
-        img_byte_arr = img_byte_arr.getvalue()
-        img_base64 = base64.b64encode(img_byte_arr).decode()
-        
+        buffered = BytesIO()
+        img.save(buffered, format='JPEG')
+        img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
         progress_ring.visible = False
-        image_container.controls.append(ft.Image(src_base64=img_base64, width=512, height=512))
-
-        page.update(image_container)
+        image.src_base64 = img_base64
+        page.update()
 
     send_button.on_click = send_click
 
@@ -45,7 +36,7 @@ def render(page: ft.Page):
         image_container
         
     ])
-
+    # model = SDModel()
     page.add(container)
 
 def startapp():
