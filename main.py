@@ -1,4 +1,6 @@
-from gui import main
+from gui import startapp
 
 
 
+if __name__ == "__main__":
+    startapp()
