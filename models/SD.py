@@ -29,5 +29,5 @@ class SDModel(Model):
             pass
 
     def query(self, prompt, negative_prompt=None):
-        t_img = self.pipe(prompt=prompt, negative_prompt=negative_prompt, num_inference_steps=1).images[0] 
+        t_img = self.pipe(prompt=prompt, negative_prompt=negative_prompt).images[0] 
         return t_img
